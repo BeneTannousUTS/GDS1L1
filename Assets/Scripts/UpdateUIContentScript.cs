@@ -7,17 +7,14 @@ using UnityEngine;
 
 public class UpdateUIContentScript : MonoBehaviour
 {
-    static readonly string SoldiersOnBoardText = "Soldiers on board = ";
-    private int _soldiersOnBoardQty = 0;
-    
-    static readonly string SoldiersSavedText = "Soldiers saved = ";
-    private int _soldiersSavedQty = 0;
+    public GameObject gameOverPanel;
+    public GameObject winPanel;
         
     // Start is called before the first frame update
     void Start()
     {
-        GameObject.Find("OnBoardText").GetComponent<TMP_Text>().text = (SoldiersOnBoardText + _soldiersOnBoardQty);
-        GameObject.Find("SoldiersSavedText").GetComponent<TMP_Text>().text = (SoldiersSavedText + _soldiersSavedQty);
+        GameObject.Find("OnBoardText").GetComponent<TMP_Text>().text = ("Soldiers on board = 0");
+        GameObject.Find("SoldiersSavedText").GetComponent<TMP_Text>().text = ("Soldiers saved = 0");
     }
 
     // Update is called once per frame
@@ -28,14 +25,22 @@ public class UpdateUIContentScript : MonoBehaviour
 
     public void UpdateSoldiersOnBoardDisplay(int soldiersOnBoard)
     {
-        _soldiersOnBoardQty = soldiersOnBoard;
-        GameObject.Find("OnBoardText").GetComponent<TMP_Text>().text = (SoldiersOnBoardText + _soldiersOnBoardQty);
+        GameObject.Find("OnBoardText").GetComponent<TMP_Text>().text = ("Soldiers on board = " + soldiersOnBoard);
     }
 
-    public void UpdateSoldiersSavedDisplay()
+    public void UpdateSoldiersSavedDisplay(int soldiersSaved)
     {
-        _soldiersSavedQty += _soldiersOnBoardQty;
-        GameObject.Find("SoldiersSavedText").GetComponent<TMP_Text>().text = (SoldiersSavedText + _soldiersSavedQty);
+        GameObject.Find("SoldiersSavedText").GetComponent<TMP_Text>().text = ("Soldiers saved = " + soldiersSaved);
+    }
+
+    public void SetGameOverActiveState(bool active)
+    {
+        gameOverPanel.SetActive(active);
+    }
+    
+    public void SetWinScreenActiveState(bool active)
+    {
+        winPanel.SetActive(active);
     }
     
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CounterManagerScript : MonoBehaviour
 {
+    private int _soldiersToSave;
     private int _soldiersSaved;
     private int _soldiersOnBoard;
     private UpdateUIContentScript _uiManagerScript;
@@ -17,12 +18,16 @@ public class CounterManagerScript : MonoBehaviour
     {
         if (_soldiersOnBoard >= 3)
         {
-            Debug.Log("Too many soldiers on board! Take them to the Hospital and try again.");
             return;
         }
         
         _soldiersOnBoard += 1;
-        _uiManagerScript.UpdateSoldiersOnBoardDisplay(GetSoldiersOnBoard());
+        _uiManagerScript.UpdateSoldiersOnBoardDisplay(_soldiersOnBoard);
+    }
+
+    public void SetSoldiersToSave(int soldiersSpawned)
+    {
+        _soldiersToSave = soldiersSpawned;
     }
 
     public int GetSoldiersOnBoard()
@@ -39,14 +44,26 @@ public class CounterManagerScript : MonoBehaviour
         
         _soldiersSaved += _soldiersOnBoard;
         _soldiersOnBoard = 0;
-        _uiManagerScript.UpdateSoldiersSavedDisplay();
-        _uiManagerScript.UpdateSoldiersOnBoardDisplay(0);
+        _uiManagerScript.UpdateSoldiersSavedDisplay(_soldiersSaved);
+        _uiManagerScript.UpdateSoldiersOnBoardDisplay(_soldiersOnBoard);
+
+        if (_soldiersSaved == _soldiersToSave)
+        {
+            GameObject.FindWithTag("Player").GetComponent<MovementScript>().setInputsDisabled(true);
+            _uiManagerScript.SetWinScreenActiveState(true);
+        }
     }
 
     public int GetSavedSoldiers()
     {
         return _soldiersSaved;
     }
-    
-    
+
+    public void ResetCounters()
+    {
+        _soldiersOnBoard = 0;
+        _soldiersSaved = 0;
+        _uiManagerScript.UpdateSoldiersOnBoardDisplay(_soldiersOnBoard);
+        _uiManagerScript.UpdateSoldiersSavedDisplay(_soldiersOnBoard);
+    }
 }
