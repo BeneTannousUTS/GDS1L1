@@ -8,12 +8,12 @@ public class MovementScript : MonoBehaviour
     public float MoveSpeed = 5.0f;
     private Vector2 Movement;
     private Rigidbody2D rb;
-    protected int SoldiersOnBoard = 0;
-    protected int SoldiersSaved = 0;
+    private CounterManagerScript _counterManagerScript;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>(); // Get the Rigidbody2D component
+        _counterManagerScript = GameObject.Find("CounterManager").GetComponent<CounterManagerScript>();
     }
 
     void Update()
@@ -34,30 +34,20 @@ public class MovementScript : MonoBehaviour
         switch (collidingTag)
         {
             case "Homebase":
-                //drop soldiers off
-                if (SoldiersOnBoard > 0)
-                {
-                    SoldiersOnBoard = 0;
-                    SoldiersSaved += SoldiersOnBoard;
-                    break;
-                }
                 
-                Debug.Log("No Soldiers to drop off! Save some soldiers and try again.");
+                _counterManagerScript.AddSavedSoldiers();
+                _counterManagerScript.AddSavedSoldiers();
+                
                 break;
             case "Obstacle":
                 //Gameover Screen
                 Debug.Log("Game Over");
                 break;
             case "Soldier":
-                if (SoldiersOnBoard < 3)
-                {
-                    Destroy(other.gameObject);
-                    SoldiersOnBoard += 1;
-                    Debug.Log("Soldier Saved! You have " + SoldiersOnBoard + " soldiers on board now.");
-                    break;
-                }
+                Destroy(other.gameObject);
                 
-                Debug.Log("Too many soldiers on board! Take them to the Hospital and try again.");
+                _counterManagerScript.AddSoldiersOnBoard();
+                
                 break;
             default:
                 Debug.Log("Not recognised collision");
